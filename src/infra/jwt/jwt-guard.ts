@@ -2,7 +2,7 @@ import { Request } from 'express';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { uuidUtility } from 'rilata2/src/common/utils/uuid/uuid-utility';
 import { JWTManager } from 'src/app/jwt/jwt-manager.interface';
-import { HTTPRequest } from 'src/app/jwt/types';
+import { RequestCY } from 'src/app/jwt/types';
 import { InvalidJWTTokenException } from './invalid-jwt-token-exception';
 
 /**
@@ -21,7 +21,7 @@ export class JWTAuthGuard implements CanActivate {
   async canActivate(
     context: ExecutionContext,
   ): Promise<boolean> {
-    const request: HTTPRequest = context.switchToHttp().getRequest();
+    const request: RequestCY = context.switchToHttp().getRequest();
     const token = this.getJwtTokenFromHeaders(request);
     if (!token) {
       request.user = {

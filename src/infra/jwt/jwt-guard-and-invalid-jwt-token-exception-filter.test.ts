@@ -67,13 +67,8 @@ beforeAll(async () => {
   await app.init();
 });
 
-test('Успешно', async () => {
-  const token = jwtManager.createToken(
-    {
-      userId,
-      employeeId,
-    },
-  );
+test('Успех.В request успешно добавлен доменный caller', async () => {
+  const token = jwtManager.createToken({ userId, employeeId });
 
   await request(app.getHttpServer())
     .get('/')
@@ -81,7 +76,7 @@ test('Успешно', async () => {
     .expect(200);
 });
 
-test('Анонимный пользователь', async () => {
+test('Успех.В request успешно добавлен анонимный caller', async () => {
   await request(app.getHttpServer())
     .get('/2')
     .expect(200);
