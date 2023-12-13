@@ -8,6 +8,7 @@ module.exports = {
     'import/no-unresolved': 'off',
     'import/extensions': 'off',
     'class-methods-use-this': 'off',
+    'import/no-extraneous-dependencies': 'off',
     '@typescript-eslint/no-unused-vars': 'warn',
   },
 }

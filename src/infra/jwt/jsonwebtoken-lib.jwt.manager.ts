@@ -10,7 +10,7 @@ import { dodUtility } from 'rilata2/src/common/utils/domain-object/dod-utility';
 import { JWTDecodeLibJWTManager } from 'rilata2/src/infra/jwt/jwt-decode-lib.jwt-manager';
 import { JWTPayload } from 'workshop-domain/src/subject/domain-data/user/user-authentification.a-params';
 import { JWTConfig } from 'src/config/jwt/types';
-import { JWTManager } from 'src/app/jwt-manager.interface';
+import { JWTManager } from 'src/app/jwt/jwt-manager.interface';
 import { JWTTokens, PlainJWTPayload, TokenType } from 'rilata2/src/app/jwt/types';
 
 export class AuthJWTManager
