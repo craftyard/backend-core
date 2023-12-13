@@ -13,7 +13,7 @@ import { JWTConfig } from 'src/config/jwt/types';
 import { JWTManager } from 'src/app/jwt/jwt-manager.interface';
 import { JWTTokens, PlainJWTPayload, TokenType } from 'rilata2/src/app/jwt/types';
 
-export class AuthJWTManager
+export class JSONWebTokenLibJWTManager
   extends JWTDecodeLibJWTManager<JWTPayload> implements JWTManager {
   constructor(private jwtConfig: JWTConfig) {
     super();
