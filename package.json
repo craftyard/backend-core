@@ -19,9 +19,9 @@
     "@nestjs/platform-express": "^10.0.0",
     "jsonwebtoken": "^9.0.2",
     "reflect-metadata": "^0.1.13",
-    "rilata2": "soul-workshop/rilata2",
+    "rilata2": "git+https://github.com/soul-workshop/rilata2",
     "rxjs": "^7.8.1",
-    "workshop-domain": "soul-workshop/domain"
+    "workshop-domain": "git+https://github.com/soul-workshop/domain"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
