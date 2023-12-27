@@ -1,5 +1,5 @@
 {
-  "name": "craft-yard-backend",
+  "name": "backend-core",
   "version": "0.0.1",
   "description": "",
   "author": "GIS-Expert",
@@ -20,9 +20,9 @@
     "@nestjs/platform-express": "^10.0.0",
     "jsonwebtoken": "^9.0.2",
     "reflect-metadata": "^0.1.13",
-    "rilata2": "git+https://github.com/soul-workshop/rilata2",
+    "rilata": "git+https://github.com/craftyard/rilata-core",
     "rxjs": "^7.8.1",
-    "workshop-domain": "git+https://github.com/soul-workshop/domain"
+    "cy-domain": "git+https://github.com/craftyard/domain"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
