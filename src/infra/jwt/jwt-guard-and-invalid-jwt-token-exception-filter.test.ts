@@ -8,10 +8,10 @@ import {
   UseFilters,
 } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { dodUtility } from 'rilata2/src/common/utils/domain-object/dod-utility';
-import { AnonymousUser, DomainUser } from 'rilata2/src/app/caller';
+import { dodUtility } from 'rilata/src/common/utils/domain-object/dod-utility';
+import { AnonymousUser, DomainUser } from 'rilata/src/app/caller';
 import { JWTConfig } from 'src/config/jwt/types';
-import { InvalidTokenError } from 'rilata2/src/app/jwt/errors';
+import { InvalidTokenError } from 'rilata/src/app/jwt/errors';
 import { JWTAuthGuard } from './jwt-guard';
 import { InvalidJWTTokenExceptionFilter } from './invalid-jwt-token-exception.filter';
 import { JSONWebTokenLibJWTManager } from './jsonwebtoken-lib.jwt.manager';
