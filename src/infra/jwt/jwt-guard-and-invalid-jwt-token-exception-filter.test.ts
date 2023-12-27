@@ -8,10 +8,10 @@ import {
   UseFilters,
 } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { dodUtility } from 'rilata2/src/common/utils/domain-object/dod-utility';
-import { AnonymousUser, DomainUser } from 'rilata2/src/app/caller';
+import { dodUtility } from 'rilata/src/common/utils/domain-object/dod-utility';
+import { AnonymousUser, DomainUser } from 'rilata/src/app/caller';
 import { JWTConfig } from 'src/config/jwt/types';
-import { InvalidTokenError } from 'rilata2/src/app/jwt/errors';
+import { InvalidTokenError } from 'rilata/src/app/jwt/errors';
 import { JWTAuthGuard } from './jwt-guard';
 import { InvalidJWTTokenExceptionFilter } from './invalid-jwt-token-exception.filter';
 import { JSONWebTokenLibJWTManager } from './jsonwebtoken-lib.jwt.manager';
@@ -20,7 +20,6 @@ const testJWTPrivateKey = '-----BEGIN RSA PRIVATE KEY-----\nMIIJKgIBAAKCAgEAtHk2
 const testJWTPublicKey = '-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAtHk29D/xTc+s9sLV2Sgt\ntR2BcoR6hm/juzPCnXJif7lgU6CClJaWNLZFz443DDlEZAzHBaHO9uDAFOXcU5/d\nTOfLoMnuA7G/CdCQf+xH/ASW9ctEcJQ8kaigj82B6gUppIHVu0ma5Sc5HyLRdsVj\ncNh9yoSOTD7AvgxEIVwRqCCFk6L/LuI89og11Xkcqa3PS5A8MkS661+Nm0doRBoc\nibM4Xj3m7VkiKDFG5yp/f7/hLxxnL9ARictz2nXZsnI5Xr3X0sTbhEOt9odgaDnt\n1BAZwHxbmXaICGBpRBQDyXTpycfibRdS+NQxdPnvXlNdi23QhbnOoi/cijjAqSqW\nv0Nf9jk+ulSvpbUDpEQK4s/NBd7XpzRxh5LDWYNF5Fz/+ecbABuF00F3raf45S+e\noUUz9Hdqhurl7b0T8JC46QxbZhI4WSVMEY2I1lGQic94qhcEDzeikoa9z5SCIXuj\nnQH9kKFH5tm8n3O0b9BJuLYp1DpBZhuYHkzn72jYEioOlTxTsl4m3/mS5tXhjfl3\nVff22GN+UnJUnBlieyZ4GhN/ExTvG6mFwM+JFs7cxtXXwZq1/zeNyS3L35IRihFb\n/dIJgPvkE+pfJzJiegG//hxH7U/i0KH2euVuKDzDGn/CN9nHVIu39D+Ht5N11jhW\nLcu1+ipwKUJdZj9mYxONvqUCAwEAAQ==\n-----END PUBLIC KEY-----\n';
 
 const userId = '6c901af3-619c-4a45-9f27-0dfcb900e53c';
-const employeeId = 'fbe91cc3-ff21-4b13-aff2-916d1b793ff5';
 
 const jwtConfig: JWTConfig = {
   algorithm: 'RS512',
@@ -68,7 +67,7 @@ beforeAll(async () => {
 });
 
 test('Успех.В request успешно добавлен доменный caller', async () => {
-  const token = jwtManager.createToken({ userId, employeeId });
+  const token = jwtManager.createToken({ userId });
 
   await request(app.getHttpServer())
     .get('/')
@@ -96,7 +95,7 @@ function checkErr(errBody: Record<string, unknown>, rawToken: string): void {
 }
 
 test('Ошибка. Передано refresh токен', async () => {
-  const token = jwtManager.createToken({ userId, employeeId });
+  const token = jwtManager.createToken({ userId });
 
   const res = await request(app.getHttpServer())
     .get('/')
@@ -120,7 +119,6 @@ test('Ошибка. Передано просроченный токен', async
   const token = jwtManager.createToken(
     {
       userId,
-      employeeId,
     },
   );
 

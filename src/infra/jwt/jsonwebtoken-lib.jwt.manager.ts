@@ -1,17 +1,17 @@
 import { verify, sign } from 'jsonwebtoken';
-import { failure } from 'rilata2/src/common/result/failure';
-import { success } from 'rilata2/src/common/result/success';
-import { Result } from 'rilata2/src/common/result/types';
+import { failure } from 'rilata/src/common/result/failure';
+import { success } from 'rilata/src/common/result/success';
+import { Result } from 'rilata/src/common/result/types';
 import {
   IncorrectTokenTypeError,
   JsonWebTokenError, NotBeforeError, NotValidTokenPayloadError, TokenExpiredError, VerifyTokenError,
-} from 'rilata2/src/app/jwt/errors';
-import { dodUtility } from 'rilata2/src/common/utils/domain-object/dod-utility';
-import { JWTDecodeLibJWTManager } from 'rilata2/src/infra/jwt/jwt-decode-lib.jwt-manager';
-import { JWTPayload } from 'workshop-domain/src/subject/domain-data/user/user-authentification.a-params';
+} from 'rilata/src/app/jwt/errors';
+import { dodUtility } from 'rilata/src/common/utils/domain-object/dod-utility';
+import { JWTDecodeLibJWTManager } from 'rilata/src/infra/jwt/jwt-decode-lib.jwt-manager';
+import { JWTPayload } from 'cy-domain/src/subject/domain-data/user/user-authentification/a-params';
 import { JWTConfig } from 'src/config/jwt/types';
 import { JWTManager } from 'src/app/jwt/jwt-manager.interface';
-import { JWTTokens, PlainJWTPayload, TokenType } from 'rilata2/src/app/jwt/types';
+import { JWTTokens, PlainJWTPayload, TokenType } from 'rilata/src/app/jwt/types';
 
 export class JSONWebTokenLibJWTManager
   extends JWTDecodeLibJWTManager<JWTPayload> implements JWTManager {
@@ -123,7 +123,6 @@ export class JSONWebTokenLibJWTManager
     payload: JWTPayload,
   ): Result<undefined, JWTPayload> {
     if (typeof payload.userId !== 'string') return failure(undefined);
-    if (payload.employeeId && typeof payload.employeeId !== 'string') return failure(undefined);
     return success(payload);
   }
 

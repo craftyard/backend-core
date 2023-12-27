@@ -1,6 +1,5 @@
 import { Request } from 'express';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { uuidUtility } from 'rilata2/src/common/utils/uuid/uuid-utility';
 import { JWTManager } from 'src/app/jwt/jwt-manager.interface';
 import { RequestCY } from 'src/app/jwt/types';
 import { InvalidJWTTokenException } from './invalid-jwt-token-exception';
@@ -26,16 +25,14 @@ export class JWTAuthGuard implements CanActivate {
     if (!token) {
       request.user = {
         type: 'AnonymousUser',
-        requestID: uuidUtility.getNewUUID(),
       };
       return true;
     }
-    const verifyResult = await this.jwtManager.verifyToken(token, 'access');
+    const verifyResult = this.jwtManager.verifyToken(token, 'access');
     if (verifyResult.isFailure()) throw new InvalidJWTTokenException();
 
     request.user = {
       type: 'DomainUser',
-      requestID: uuidUtility.getNewUUID(),
       userId: verifyResult.value.userId,
     };
 
