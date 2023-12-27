@@ -1,7 +1,7 @@
 /* eslint-disable no-return-assign */
-import { Database } from 'rilata2/src/app/database';
-import { ModuleResolver } from 'rilata2/src/app/resolves/module-resolver';
-import { UuidType } from 'rilata2/src/common/types';
+import { Database } from 'rilata/src/app/database';
+import { ModuleResolver } from 'rilata/src/app/resolves/module-resolver';
+import { UuidType } from 'rilata/src/common/types';
 import {
   DataSource, DataSourceOptions, EntityManager, QueryRunner,
   ReplicationMode, createConnection,
@@ -53,13 +53,13 @@ export class TypeormDatabase implements Database {
     const queryRunner = this.getQueryRunnerOrExeprion(unitOfWorkId);
     try {
       await queryRunner.commitTransaction();
-      this.queryRunners.delete(unitOfWorkId);
     } catch (e) {
       const errStr = 'Не удалось зафиксировать транзацкию БД.';
       this.resolver.getLogger().error(errStr, e);
       throw e;
     } finally {
       queryRunner.release();
+      this.queryRunners.delete(unitOfWorkId);
     }
   }
 
@@ -67,13 +67,13 @@ export class TypeormDatabase implements Database {
     const queryRunner = this.getQueryRunnerOrExeprion(unitOfWorkId);
     try {
       await queryRunner.rollbackTransaction();
-      this.queryRunners.delete(unitOfWorkId);
     } catch (e) {
       const errStr = 'Не удалось откатить транзацкию БД.';
       this.resolver.getLogger().error(errStr, e);
       throw e;
     } finally {
       queryRunner.release();
+      this.queryRunners.delete(unitOfWorkId);
     }
   }
 

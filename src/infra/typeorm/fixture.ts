@@ -6,13 +6,13 @@ import {
   Column, Entity, PrimaryColumn, PrimaryGeneratedColumn, Table,
 } from 'typeorm';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
-import { ModuleResolver } from 'rilata2/src/app/resolves/module-resolver';
-import { Database } from 'rilata2/src/app/database/database';
-import { TokenVerifier } from 'rilata2/src/app/jwt/token-verifier.interface';
-import { Module } from 'rilata2/src/app/module/module';
-import { Logger } from 'rilata2/src/common/logger/logger';
-import { DTO } from 'rilata2/src/domain/dto';
-import { ConsoleLogger } from 'rilata2/src/common/logger/console-logger';
+import { ModuleResolver } from 'rilata/src/app/resolves/module-resolver';
+import { Database } from 'rilata/src/app/database/database';
+import { TokenVerifier } from 'rilata/src/app/jwt/token-verifier.interface';
+import { Module } from 'rilata/src/app/module/module';
+import { Logger } from 'rilata/src/common/logger/logger';
+import { DTO } from 'rilata/src/domain/dto';
+import { ConsoleLogger } from 'rilata/src/common/logger/console-logger';
 import { TypeormDatabase } from './database';
 
 export namespace TypeormTestFixtures {
