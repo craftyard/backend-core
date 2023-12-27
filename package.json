@@ -22,6 +22,8 @@
     "reflect-metadata": "^0.1.13",
     "rilata2": "git+https://github.com/soul-workshop/rilata2",
     "rxjs": "^7.8.1",
+    "sqlite3": "^5.1.6",
+    "typeorm": "^0.3.17",
     "workshop-domain": "git+https://github.com/soul-workshop/domain"
   },
   "devDependencies": {
