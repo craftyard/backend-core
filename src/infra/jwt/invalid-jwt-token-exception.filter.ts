@@ -5,9 +5,9 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
-import { ResultDTO } from 'rilata2/src/app/result-dto';
-import { InvalidTokenError } from 'rilata2/src/app/jwt/errors';
-import { dodUtility } from 'rilata2/src/common/utils/domain-object/dod-utility';
+import { ResultDTO } from 'rilata/src/app/result-dto';
+import { InvalidTokenError } from 'rilata/src/app/jwt/errors';
+import { dodUtility } from 'rilata/src/common/utils/domain-object/dod-utility';
 import { InvalidJWTTokenException } from './invalid-jwt-token-exception';
 
 /**
