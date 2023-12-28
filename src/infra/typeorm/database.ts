@@ -28,9 +28,10 @@ export class TypeormDatabase implements Database {
   getUnitOfWorkId(): UuidType {
     const { unitOfWorkId } = storeDispatcher.getStoreOrExepction();
     if (unitOfWorkId === undefined) {
-      const errStr = 'Значение атрибута unitOfWorkId не установлена. Убедитесь что вы запрашиваете ее в рамках запроса контроллера.';
-      this.resolver.getLogger().error(errStr, { unitOfWorkId });
-      throw new AssertionException(errStr);
+      throw this.resolver.getLogger().error(
+        'Значение атрибута unitOfWorkId не установлена. Убедитесь что вы запрашиваете ее в рамках запроса контроллера.',
+        { unitOfWorkId },
+      );
     }
     return unitOfWorkId;
   }
@@ -69,8 +70,7 @@ export class TypeormDatabase implements Database {
     try {
       await queryRunner.commitTransaction();
     } catch (e) {
-      const errStr = 'Не удалось зафиксировать транзацкию БД.';
-      this.resolver.getLogger().error(errStr, e);
+      this.resolver.getLogger().error('Не удалось зафиксировать транзацкию БД.', e);
       throw e;
     } finally {
       queryRunner.release();
@@ -84,8 +84,7 @@ export class TypeormDatabase implements Database {
     try {
       await queryRunner.rollbackTransaction();
     } catch (e) {
-      const errStr = 'Не удалось откатить транзацкию БД.';
-      this.resolver.getLogger().error(errStr, e);
+      this.resolver.getLogger().error('Не удалось откатить транзацкию БД.', e);
       throw e;
     } finally {
       queryRunner.release();
@@ -119,9 +118,7 @@ export class TypeormDatabase implements Database {
   protected getQueryRunnerOrException(unitOfWorkId: string): QueryRunner {
     const queryRunner = this.queryRunners.get(unitOfWorkId);
     if (!queryRunner) {
-      const errStr = 'not founded query runner';
-      this.resolver.getLogger().error(errStr);
-      throw Error(errStr);
+      throw this.resolver.getLogger().error('not founded query runner');
     }
     return queryRunner;
   }
