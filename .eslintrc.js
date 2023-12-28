@@ -9,6 +9,8 @@ module.exports = {
     'import/extensions': 'off',
     'class-methods-use-this': 'off',
     'import/no-extraneous-dependencies': 'off',
+    'no-useless-constructor': 'off',
+    'no-empty-function': 'off',
     '@typescript-eslint/no-unused-vars': 'warn',
   },
 }

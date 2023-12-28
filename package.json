@@ -22,6 +22,8 @@
     "reflect-metadata": "^0.1.13",
     "rilata": "git+https://github.com/craftyard/rilata-core",
     "rxjs": "^7.8.1",
+    "sqlite3": "^5.1.6",
+    "typeorm": "^0.3.17",
     "cy-domain": "git+https://github.com/craftyard/domain"
   },
   "devDependencies": {
