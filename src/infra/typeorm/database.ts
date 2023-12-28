@@ -7,6 +7,8 @@ import {
   ReplicationMode, createConnection,
 } from 'typeorm';
 import { TypeormExeptions } from './types';
+import { storeDispatcher } from 'rilata/src/app/async-store/store-dispatcher';
+import { AssertionException } from 'rilata/src/common/exeptions';
 
 const EXCEPTIONS_DESCRIPTIONS_TUPLE = [
   ['QueryFailedError: SQLITE_CONSTRAINT: NOT NULL', 'not null'],
@@ -22,6 +24,16 @@ export class TypeormDatabase implements Database {
     protected dataSourceOptions: DataSourceOptions,
     protected resolver: ModuleResolver,
   ) {}
+
+  getUnitOfWorkId(): UuidType {
+    const { unitOfWorkId } = storeDispatcher.getStoreOrExepction();
+    if (unitOfWorkId === undefined) {
+      const errStr = 'Значение атрибута unitOfWorkId не установлена. Убедитесь что вы запрашиваете ее в рамках запроса контроллера.';
+      this.resolver.getLogger().error(errStr, { unitOfWorkId });
+      throw new AssertionException(errStr);
+    }
+    return unitOfWorkId;
+  }
 
   async init(): Promise<void> {
     this.dataSource = await createConnection(this.dataSourceOptions);
@@ -40,17 +52,19 @@ export class TypeormDatabase implements Database {
     return queryRunner.manager;
   }
 
-  async startTransaction(unitOfWorkId: UuidType): Promise<void> {
-    if (this.queryRunners.get(unitOfWorkId) !== undefined) return;
+  async startTransaction(unitOfWorkId?: UuidType): Promise<void> {
+    const requiredUowId = unitOfWorkId ?? this.getUnitOfWorkId();
+    if (this.queryRunners.get(requiredUowId) !== undefined) return;
 
     const queryRunner = this.createQueryRunner();
     await queryRunner.startTransaction();
 
-    this.queryRunners.set(unitOfWorkId, queryRunner);
+    this.queryRunners.set(requiredUowId, queryRunner);
   }
 
-  async commit(unitOfWorkId: string): Promise<void> {
-    const queryRunner = this.getQueryRunnerOrExeprion(unitOfWorkId);
+  async commit(unitOfWorkId?: string): Promise<void> {
+    const requiredUowId = unitOfWorkId ?? this.getUnitOfWorkId();
+    const queryRunner = this.getQueryRunnerOrExeprion(requiredUowId);
     try {
       await queryRunner.commitTransaction();
     } catch (e) {
@@ -59,12 +73,13 @@ export class TypeormDatabase implements Database {
       throw e;
     } finally {
       queryRunner.release();
-      this.queryRunners.delete(unitOfWorkId);
+      this.queryRunners.delete(requiredUowId);
     }
   }
 
-  async rollback(unitOfWorkId: string): Promise<void> {
-    const queryRunner = this.getQueryRunnerOrExeprion(unitOfWorkId);
+  async rollback(unitOfWorkId?: string): Promise<void> {
+    const requiredUowId = unitOfWorkId ?? this.getUnitOfWorkId();
+    const queryRunner = this.getQueryRunnerOrExeprion(requiredUowId);
     try {
       await queryRunner.rollbackTransaction();
     } catch (e) {
@@ -73,7 +88,7 @@ export class TypeormDatabase implements Database {
       throw e;
     } finally {
       queryRunner.release();
-      this.queryRunners.delete(unitOfWorkId);
+      this.queryRunners.delete(requiredUowId);
     }
   }
 
