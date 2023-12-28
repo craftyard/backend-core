@@ -4,11 +4,11 @@ import { ModuleResolver } from 'rilata/src/app/resolves/module-resolver';
 import { UuidType } from 'rilata/src/common/types';
 import {
   DataSource, DataSourceOptions, EntityManager, QueryRunner,
-  ReplicationMode, createConnection,
+  ReplicationMode,
 } from 'typeorm';
-import { TypeormExeptions } from './types';
 import { storeDispatcher } from 'rilata/src/app/async-store/store-dispatcher';
 import { AssertionException } from 'rilata/src/common/exeptions';
+import { TypeormExceptions } from './types';
 
 const EXCEPTIONS_DESCRIPTIONS_TUPLE = [
   ['QueryFailedError: SQLITE_CONSTRAINT: NOT NULL', 'not null'],
@@ -36,7 +36,8 @@ export class TypeormDatabase implements Database {
   }
 
   async init(): Promise<void> {
-    this.dataSource = await createConnection(this.dataSourceOptions);
+    this.dataSource = new DataSource(this.dataSourceOptions);
+    await this.dataSource.initialize();
   }
 
   createEntityManager(): EntityManager {
@@ -48,7 +49,7 @@ export class TypeormDatabase implements Database {
   }
 
   getEntityManager(unitOfWorkId: string): EntityManager {
-    const queryRunner = this.getQueryRunnerOrExeprion(unitOfWorkId);
+    const queryRunner = this.getQueryRunnerOrException(unitOfWorkId);
     return queryRunner.manager;
   }
 
@@ -64,7 +65,7 @@ export class TypeormDatabase implements Database {
 
   async commit(unitOfWorkId?: string): Promise<void> {
     const requiredUowId = unitOfWorkId ?? this.getUnitOfWorkId();
-    const queryRunner = this.getQueryRunnerOrExeprion(requiredUowId);
+    const queryRunner = this.getQueryRunnerOrException(requiredUowId);
     try {
       await queryRunner.commitTransaction();
     } catch (e) {
@@ -79,7 +80,7 @@ export class TypeormDatabase implements Database {
 
   async rollback(unitOfWorkId?: string): Promise<void> {
     const requiredUowId = unitOfWorkId ?? this.getUnitOfWorkId();
-    const queryRunner = this.getQueryRunnerOrExeprion(requiredUowId);
+    const queryRunner = this.getQueryRunnerOrException(requiredUowId);
     try {
       await queryRunner.rollbackTransaction();
     } catch (e) {
@@ -92,7 +93,7 @@ export class TypeormDatabase implements Database {
     }
   }
 
-  errToExceptionDescription(e: Error): TypeormExeptions | undefined {
+  errToExceptionDescription(e: Error): TypeormExceptions | undefined {
     const errStr = String(e);
     const index = this.getExceptionDescriptionIndex(errStr);
     if (index === -1) return;
@@ -115,7 +116,7 @@ export class TypeormDatabase implements Database {
     return { table, column };
   }
 
-  protected getQueryRunnerOrExeprion(unitOfWorkId: string): QueryRunner {
+  protected getQueryRunnerOrException(unitOfWorkId: string): QueryRunner {
     const queryRunner = this.queryRunners.get(unitOfWorkId);
     if (!queryRunner) {
       const errStr = 'not founded query runner';
