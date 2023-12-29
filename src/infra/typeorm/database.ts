@@ -6,9 +6,9 @@ import {
   DataSource, DataSourceOptions, EntityManager, QueryRunner,
   ReplicationMode, createConnection,
 } from 'typeorm';
-import { TypeormExeptions } from './types';
 import { storeDispatcher } from 'rilata/src/app/async-store/store-dispatcher';
 import { AssertionException } from 'rilata/src/common/exeptions';
+import { TypeormExeptions } from './types';
 
 const EXCEPTIONS_DESCRIPTIONS_TUPLE = [
   ['QueryFailedError: SQLITE_CONSTRAINT: NOT NULL', 'not null'],

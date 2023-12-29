@@ -18,13 +18,14 @@
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
+    "cy-domain": "git+https://github.com/craftyard/domain",
     "jsonwebtoken": "^9.0.2",
     "reflect-metadata": "^0.1.13",
     "rilata": "git+https://github.com/craftyard/rilata-core",
     "rxjs": "^7.8.1",
     "sqlite3": "^5.1.6",
-    "typeorm": "^0.3.17",
-    "cy-domain": "git+https://github.com/craftyard/domain"
+    "ts-node": "^10.9.2",
+    "typeorm": "^0.3.17"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
