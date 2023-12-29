@@ -10,4 +10,4 @@ type Unique = {
   column: string,
 }
 
-export type TypeormExeptions = NotNull | Unique;
+export type TypeormExceptions = NotNull | Unique;

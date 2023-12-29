@@ -13,10 +13,15 @@ import { Module } from 'rilata/src/app/module/module';
 import { Logger } from 'rilata/src/common/logger/logger';
 import { DTO } from 'rilata/src/domain/dto';
 import { ConsoleLogger } from 'rilata/src/common/logger/console-logger';
+import { RunMode } from 'rilata/src/app/types';
 import { TypeormDatabase } from './database';
 
 export namespace TypeormTestFixtures {
   export class ResolverMock implements ModuleResolver {
+    getRunMode(): RunMode {
+      return 'test';
+    }
+
     init(module: Module): void {
       throw new Error('Method not implemented.');
     }
