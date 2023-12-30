@@ -89,7 +89,6 @@ export namespace TypeormTestFixtures {
     async init(): Promise<void> {
       await super.init();
       const queryRunner = this.createQueryRunner();
-      // const migration = new CreateTablesMigration();
       await queryRunner.startTransaction();
       await queryRunner.manager.query(createUserTableSql);
       await queryRunner.manager.query(createEventTableSql);
