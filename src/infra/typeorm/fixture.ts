@@ -71,55 +71,6 @@ export namespace TypeormTestFixtures {
     entities: [User, Event],
   };
 
-  // class CreateTablesMigration implements MigrationInterface {
-  //   name?: string;
-  //
-  //   transaction?: boolean;
-  //
-  //   async up(queryRunner: QueryRunner): Promise<void> {
-  //     await queryRunner.createTable(
-  //       new Table({
-  //         name: 'user',
-  //         columns: [
-  //           {
-  //             name: 'name',
-  //             type: 'varchar',
-  //             isPrimary: true,
-  //           },
-  //           {
-  //             name: 'age',
-  //             type: 'integer',
-  //             isUnique: true,
-  //           },
-  //         ],
-  //       }),
-  //       true,
-  //     );
-  //
-  //     await queryRunner.createTable(
-  //       new Table({
-  //         name: 'event',
-  //         columns: [
-  //           {
-  //             name: 'id',
-  //             type: 'string',
-  //             isPrimary: true,
-  //           },
-  //           {
-  //             name: 'attrs',
-  //             type: 'varchar',
-  //           },
-  //         ],
-  //       }),
-  //       true,
-  //     );
-  //   }
-  //
-  //   down(queryRunner: QueryRunner): Promise<never> {
-  //     throw new Error('Method not implemented.');
-  //   }
-  // }
-
   const createUserTableSql = `CREATE  TABLE IF NOT EXISTS user (
     name TEXT PRIMARY KEY,
     age INTEGER UNIQUE
