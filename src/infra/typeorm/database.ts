@@ -7,7 +7,6 @@ import {
   ReplicationMode,
 } from 'typeorm';
 import { storeDispatcher } from 'rilata/src/app/async-store/store-dispatcher';
-import { AssertionException } from 'rilata/src/common/exeptions';
 import { TypeormExceptions } from './types';
 
 const EXCEPTIONS_DESCRIPTIONS_TUPLE = [
@@ -16,7 +15,7 @@ const EXCEPTIONS_DESCRIPTIONS_TUPLE = [
 ] as const;
 
 export class TypeormDatabase implements Database {
-  dataSource: DataSource;
+  dataSource!: DataSource;
 
   protected queryRunners: Map<UuidType, QueryRunner> = new Map();
 
