@@ -17,6 +17,6 @@ export const jwtConfig: JWTConfig = {
   algorithm: 'RS512',
   privateKey: getJwtPrivateKey(),
   publicKey: getJwtPublicKey(),
-  accessTokenExpiresIn: '10h',
+  accessTokenExpiresIn: '99d',
   refreshTokenExpiresIn: '3d',
 };
