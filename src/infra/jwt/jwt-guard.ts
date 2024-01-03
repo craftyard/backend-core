@@ -1,8 +1,8 @@
 import { Request } from 'express';
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { JWTManager } from 'src/app/jwt/jwt-manager.interface';
-import { RequestCY } from 'src/app/jwt/types';
 import { InvalidJWTTokenException } from './invalid-jwt-token-exception';
+import { JWTManager } from '../../app/jwt/jwt-manager.interface';
+import { RequestCY } from '../../app/jwt/types';
 
 /**
  * Получает токен из заголовок HTTP запроса,
