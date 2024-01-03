@@ -5,23 +5,22 @@ import {
 import { TypeormTestFixtures as TestFixtures } from './fixture';
 
 describe('тесты проверяющие работу транзакции бд typeorm', async () => {
-  const globalUnitOfWorkId = crypto.randomUUID();
+  let globalUnitOfWorkId: string;
   const sut = new TestFixtures.TestDatabase();
   await sut.init();
 
   beforeEach(async () => {
-    await sut.startTransaction(globalUnitOfWorkId);
+    globalUnitOfWorkId = await sut.startTransaction();
   });
 
   afterEach(async () => {
     await sut.rollback(globalUnitOfWorkId);
+    globalUnitOfWorkId = undefined;
   });
 
   describe('проверка работы вложенных транзакции', () => {
     test('успех, запись в одной таблице', async () => {
-      const unitOfWorkId = crypto.randomUUID();
-
-      await sut.startTransaction(unitOfWorkId);
+      const unitOfWorkId = await sut.startTransaction();
       const user = new TestFixtures.User();
       user.name = 'Alex'; user.age = 15;
       await sut.getEntityManager(unitOfWorkId).save(user);
@@ -34,9 +33,7 @@ describe('тесты проверяющие работу транзакции б
     });
 
     test('успех, запись в двух таблицах', async () => {
-      const unitOfWorkId = crypto.randomUUID();
-
-      await sut.startTransaction(unitOfWorkId);
+      const unitOfWorkId = await sut.startTransaction();
       const entityManager = sut.getEntityManager(unitOfWorkId);
 
       const user = new TestFixtures.User();
@@ -61,9 +58,7 @@ describe('тесты проверяющие работу транзакции б
     });
 
     test('провал, первый записался, второй вызвал исключение, в итоге ничего не записалось', async () => {
-      const unitOfWorkId = crypto.randomUUID();
-
-      await sut.startTransaction(unitOfWorkId);
+      const unitOfWorkId = await sut.startTransaction();
       const entityManager = sut.getEntityManager(unitOfWorkId);
 
       const user = new TestFixtures.User();
@@ -99,9 +94,7 @@ describe('тесты проверяющие работу транзакции б
 
   describe('проверка получения объектов ошибок', () => {
     test('ошибка нарушения уникальности поля', async () => {
-      const unitOfWorkId = crypto.randomUUID();
-
-      await sut.startTransaction(unitOfWorkId);
+      const unitOfWorkId = await sut.startTransaction();
       const entityManager = sut.getEntityManager(unitOfWorkId);
 
       const user = new TestFixtures.User();
