@@ -82,7 +82,7 @@ describe('тесты проверяющие работу транзакции б
         expect(String(e)).toBe(
           'QueryFailedError: SQLITE_CONSTRAINT: NOT NULL constraint failed: event.attrs',
         );
-        expect(sut.errToExceptionDescription(e)).toEqual({
+        expect(sut.errToExceptionDescription(e as Error)).toEqual({
           type: 'not null',
           table: 'event',
           column: 'attrs',
@@ -117,7 +117,7 @@ describe('тесты проверяющие работу транзакции б
         expect(String(e)).toBe(
           'QueryFailedError: SQLITE_CONSTRAINT: UNIQUE constraint failed: user.age',
         );
-        expect(sut.errToExceptionDescription(e)).toEqual({
+        expect(sut.errToExceptionDescription(e as Error)).toEqual({
           type: 'unique',
           table: 'user',
           column: 'age',

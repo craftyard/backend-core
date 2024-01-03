@@ -18,6 +18,10 @@ import { TypeormDatabase } from './database';
 
 export namespace TypeormTestFixtures {
   export class ResolverMock implements ModuleResolver {
+    getRealisation(...args: unknown[]): unknown {
+      throw new Error('Method not implemented.');
+    }
+
     getRunMode(): RunMode {
       return 'test';
     }
@@ -50,19 +54,19 @@ export namespace TypeormTestFixtures {
   @Entity()
   export class User {
     @PrimaryColumn()
-      name: string;
+      name!: string;
 
     @Column({ type: 'int', unique: true })
-      age: number;
+      age!: number;
   }
 
   @Entity()
   export class Event {
     @PrimaryGeneratedColumn('uuid')
-      id: string;
+      id!: string;
 
     @Column('simple-json')
-      attrs: string;
+      attrs!: string;
   }
 
   const dataSourceOptions: SqliteConnectionOptions = {
