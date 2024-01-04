@@ -2,8 +2,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 /* eslint-disable max-classes-per-file */
 import {
-  MigrationInterface, QueryRunner,
-  Column, Entity, PrimaryColumn, PrimaryGeneratedColumn, Table,
+  Column, Entity, PrimaryColumn, PrimaryGeneratedColumn,
 } from 'typeorm';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 import { ModuleResolver } from 'rilata/src/app/resolves/module-resolver';
@@ -56,7 +55,10 @@ export namespace TypeormTestFixtures {
     @PrimaryColumn()
       name!: string;
 
-    @Column({ type: 'int', unique: true })
+    @Column({ unique: true })
+      nickName!: string;
+
+    @Column({ type: 'int' })
       age!: number;
   }
 
@@ -77,7 +79,8 @@ export namespace TypeormTestFixtures {
 
   const createUserTableSql = `CREATE  TABLE IF NOT EXISTS user (
     name TEXT PRIMARY KEY,
-    age INTEGER UNIQUE
+    nickName TEXT UNIQUE,
+    age INTEGER
   );`;
 
   const createEventTableSql = `CREATE  TABLE IF NOT EXISTS event (
