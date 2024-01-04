@@ -9,37 +9,32 @@ export class EventRepository implements DomainEventRepository {
   protected entityManager: EntityManager;
 
   constructor(protected typeormDatabase: TypeormDatabase, protected logger: Logger) {
-    this.init();
     this.entityManager = typeormDatabase.createEntityManager();
-  }
-
-  async init() {
-    await this.typeormDatabase.init();
   }
 
   async addEvent(event: GeneralEventDod): Promise<void> {
     const eventEntity = new Event();
     eventEntity.actionId = event.meta.actionId;
-    eventEntity.attrs = JSON.stringify(event.attrs);
+    eventEntity.attrs = JSON.stringify(event);
     eventEntity.isPublished = false;
     try {
-      const entityManager = this.typeormDatabase.createEntityManager();
-      await entityManager.save(eventEntity);
+      await this.entityManager.save(eventEntity);
     } catch (e) {
-      this.logger.error('db server error', e);
+      throw await this.logger.error('db server error', e);
     }
   }
 
-  getNotPublishedEvents(): GeneralEventDod[] {
-    throw new Error('Method not implemented.');
+  async getNotPublishedEvents(): Promise<GeneralEventDod[]> {
+    return (await this.entityManager.find(Event, { where: { isPublished: false } }))
+      .map((eventEnt) => JSON.parse(eventEnt.attrs));
   }
 
   async markAsPublished(eventId: string): Promise<void> {
     try {
-      await this.typeormDatabase.createEntityManager()
+      await this.entityManager
         .update(Event, { actionId: eventId }, { isPublished: true });
     } catch (e) {
-      this.logger.error('db server error', e);
+      throw await this.logger.error('db server error', e);
     }
   }
 }

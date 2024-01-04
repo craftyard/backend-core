@@ -18,6 +18,10 @@ import { TypeormDatabase } from './database';
 
 export namespace TypeormTestFixtures {
   export class ResolverMock implements ModuleResolver {
+    getRealisation(...args: unknown[]): unknown {
+      throw new Error('Method not implemented.');
+    }
+
     getRunMode(): RunMode {
       return 'test';
     }
