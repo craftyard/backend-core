@@ -22,7 +22,7 @@ describe('тесты проверяющие работу транзакции б
     test('успех, запись в одной таблице', async () => {
       const unitOfWorkId = await sut.startTransaction();
       const user = new TestFixtures.User();
-      user.name = 'Alex'; user.age = 15;
+      user.name = 'Alex'; user.age = 15; user.nickName = 'f!r$t';
       await sut.getEntityManager(unitOfWorkId).save(user);
       await sut.commit(unitOfWorkId);
 
@@ -37,11 +37,11 @@ describe('тесты проверяющие работу транзакции б
       const entityManager = sut.getEntityManager(unitOfWorkId);
 
       const user = new TestFixtures.User();
-      user.name = 'Alex'; user.age = 15;
+      user.name = 'Alex'; user.age = 15; user.nickName = 'f!r$t';
       await entityManager.save(user);
 
       const event = new TestFixtures.Event();
-      event.attrs = JSON.stringify({ name: 'Alex', age: 15 });
+      event.attrs = JSON.stringify({ name: 'Alex', nickName: 'f!r$t', age: 15 });
       await entityManager.save(event);
 
       await sut.commit(unitOfWorkId);
@@ -49,12 +49,15 @@ describe('тесты проверяющие работу транзакции б
       const expectUsers = await sut.createEntityManager().find(TestFixtures.User);
       expect(expectUsers.length).toBe(1);
       expect(expectUsers[0].name).toBe('Alex');
+      expect(expectUsers[0].nickName).toBe('f!r$t');
       expect(expectUsers[0].age).toBe(15);
 
       const expectEvent = await sut.createEntityManager().find(TestFixtures.Event);
       expect(expectEvent.length).toBe(1);
       expect(typeof expectEvent[0].id).toBe('string');
-      expect(expectEvent[0].attrs).toEqual(JSON.stringify({ name: 'Alex', age: 15 }));
+      expect(expectEvent[0].attrs).toEqual(JSON.stringify(
+        { name: 'Alex', nickName: 'f!r$t', age: 15 },
+      ));
     });
 
     test('провал, первый записался, второй вызвал исключение, в итоге ничего не записалось', async () => {
@@ -62,7 +65,7 @@ describe('тесты проверяющие работу транзакции б
       const entityManager = sut.getEntityManager(unitOfWorkId);
 
       const user = new TestFixtures.User();
-      user.name = 'Alex'; user.age = 15;
+      user.name = 'Alex'; user.age = 15; user.nickName = 'f!r$t';
       await entityManager.save(user);
 
       const expectUsers = await sut.createEntityManager().find(TestFixtures.User);
@@ -98,22 +101,22 @@ describe('тесты проверяющие работу транзакции б
       const entityManager = sut.getEntityManager(unitOfWorkId);
 
       const user = new TestFixtures.User();
-      user.name = 'Alex'; user.age = 15;
+      user.name = 'Alex'; user.age = 15; user.nickName = 'f!r$t';
       await entityManager.save(user);
       const user2 = new TestFixtures.User();
-      user2.name = 'Bill'; user2.age = 15;
+      user2.name = 'Bill'; user2.age = 17; user2.nickName = 'f!r$t';
       try {
         await entityManager.save(user2);
         expect(true).toBe(false);
       } catch (e) {
         await sut.rollback(unitOfWorkId);
         expect(String(e)).toBe(
-          'QueryFailedError: SQLITE_CONSTRAINT: UNIQUE constraint failed: user.age',
+          'QueryFailedError: SQLITE_CONSTRAINT: UNIQUE constraint failed: user.nickName',
         );
         expect(sut.errToExceptionDescription(e as Error)).toEqual({
           type: 'unique',
           table: 'user',
-          column: 'age',
+          column: 'nickName',
         });
       }
     });
