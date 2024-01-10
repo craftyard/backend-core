@@ -1,4 +1,4 @@
-import { DomainEventRepository } from 'node_modules/rilata/src/app/database/domain-event-repository';
+import { DomainEventRepository } from 'rilata/src/app/database/domain-event-repository';
 import { GeneralEventDod } from 'rilata/src/domain/domain-data/domain-types';
 import { Logger } from 'rilata/src/common/logger/logger';
 import { EntityManager } from 'typeorm';
