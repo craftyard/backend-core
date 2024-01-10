@@ -118,6 +118,10 @@ describe('event repo test', () => {
     ]);
   });
 
+  test('fail, not published events not found', async () => {
+    expect(await eventRepo.getNotPublishedEvents()).toEqual([]);
+  });
+
   test('success, event entity marked as published', async () => {
     await eventRepo.addEvent(eventDOD);
     await eventRepo.markAsPublished('c7ab5938-ac52-47d6-b831-62fbd3cbc288');
