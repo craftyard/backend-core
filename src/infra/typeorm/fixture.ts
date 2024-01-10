@@ -2,8 +2,7 @@
 /* eslint-disable @typescript-eslint/no-namespace */
 /* eslint-disable max-classes-per-file */
 import {
-  MigrationInterface, QueryRunner,
-  Column, Entity, PrimaryColumn, PrimaryGeneratedColumn, Table,
+  Column, Entity, PrimaryColumn, PrimaryGeneratedColumn,
 } from 'typeorm';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 import { ModuleResolver } from 'rilata/src/app/resolves/module-resolver';
@@ -54,19 +53,22 @@ export namespace TypeormTestFixtures {
   @Entity()
   export class User {
     @PrimaryColumn()
-      name: string;
+      name!: string;
 
-    @Column({ type: 'int', unique: true })
-      age: number;
+    @Column({ unique: true })
+      nickName!: string;
+
+    @Column({ type: 'int' })
+      age!: number;
   }
 
   @Entity()
   export class Event {
     @PrimaryGeneratedColumn('uuid')
-      id: string;
+      id!: string;
 
     @Column('simple-json')
-      attrs: string;
+      attrs!: string;
   }
 
   const dataSourceOptions: SqliteConnectionOptions = {
@@ -75,54 +77,16 @@ export namespace TypeormTestFixtures {
     entities: [User, Event],
   };
 
-  class CreateTablesMigration implements MigrationInterface {
-    name?: string;
+  const createUserTableSql = `CREATE  TABLE IF NOT EXISTS user (
+    name TEXT PRIMARY KEY,
+    nickName TEXT UNIQUE,
+    age INTEGER
+  );`;
 
-    transaction?: boolean;
-
-    async up(queryRunner: QueryRunner): Promise<void> {
-      await queryRunner.createTable(
-        new Table({
-          name: 'user',
-          columns: [
-            {
-              name: 'name',
-              type: 'varchar',
-              isPrimary: true,
-            },
-            {
-              name: 'age',
-              type: 'integer',
-              isUnique: true,
-            },
-          ],
-        }),
-        true,
-      );
-
-      await queryRunner.createTable(
-        new Table({
-          name: 'event',
-          columns: [
-            {
-              name: 'id',
-              type: 'string',
-              isPrimary: true,
-            },
-            {
-              name: 'attrs',
-              type: 'varchar',
-            },
-          ],
-        }),
-        true,
-      );
-    }
-
-    down(queryRunner: QueryRunner): Promise<never> {
-      throw new Error('Method not implemented.');
-    }
-  }
+  const createEventTableSql = `CREATE  TABLE IF NOT EXISTS event (
+    id TEXT PRIMARY KEY,
+    attrs TEXT NOT NULL
+  );`;
 
   export class TestDatabase extends TypeormDatabase {
     constructor() {
@@ -132,9 +96,9 @@ export namespace TypeormTestFixtures {
     async init(): Promise<void> {
       await super.init();
       const queryRunner = this.createQueryRunner();
-      const migration = new CreateTablesMigration();
       await queryRunner.startTransaction();
-      await migration.up(queryRunner);
+      await queryRunner.manager.query(createUserTableSql);
+      await queryRunner.manager.query(createEventTableSql);
       await queryRunner.commitTransaction();
       await queryRunner.release();
     }
