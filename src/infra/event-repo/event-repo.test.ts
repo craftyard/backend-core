@@ -4,7 +4,6 @@ import {
   describe,
   expect, test,
 } from 'bun:test';
-import { Table } from 'typeorm';
 import { ConsoleLogger } from 'rilata/src/common/logger/console-logger';
 import { EventRepository } from './event-repo';
 import { eventDOD, typeormDatabase } from './fixture';
@@ -15,33 +14,6 @@ let eventRepo: EventRepository;
 beforeAll(async () => {
   await typeormDatabase.init();
   eventRepo = new EventRepository(typeormDatabase, new ConsoleLogger());
-  // await typeormDatabase.dataSource.createQueryRunner().createTable(
-  //   new Table({
-  //     name: 'Event',
-  //     columns: [
-  //       {
-  //         name: 'id',
-  //         type: 'varchar',
-  //         generationStrategy: 'uuid',
-  //         isPrimary: true,
-  //       },
-  //       {
-  //         name: 'actionId',
-  //         type: 'varchar',
-  //         isPrimary: true,
-  //         isUnique: true,
-  //       },
-  //       {
-  //         name: 'isPublished',
-  //         type: 'boolean',
-  //       },
-  //       {
-  //         name: 'attrs',
-  //         type: 'varchar',
-  //       },
-  //     ],
-  //   }),
-  // );
 });
 
 afterEach(async () => {
