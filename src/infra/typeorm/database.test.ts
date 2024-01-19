@@ -15,7 +15,6 @@ describe('тесты проверяющие работу транзакции б
 
   afterEach(async () => {
     await sut.rollback(globalUnitOfWorkId);
-    globalUnitOfWorkId = undefined;
   });
 
   describe('проверка работы вложенных транзакции', () => {
