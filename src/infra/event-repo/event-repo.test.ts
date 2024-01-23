@@ -61,6 +61,42 @@ describe('event repo test', () => {
       expect(eventEntity.attrs).toBe('{"attrs":{"username":"azat","age":19},"meta":{"eventId":"d00103e8-eb18-4694-9efd-ce0b2dcbf0d7","actionId":"c7ab5938-ac52-47d6-b831-62fbd3cbc288","name":"UserAdded","moduleName":"subject","domainType":"event"},'
       + '"caller":{"type":"DomainUser","userId":"034e14d1-eabd-4491-b922-77b72f83590d"},"aRootAttrs":{"attrs":{"username":"azat","age":19},"meta":{"name":"UserAR","domainType":"aggregate","version":0}}}');
     });
+
+    test('fail, event entity with that id is already exist', async () => {
+      await eventRepo.addEvent(eventDOD);
+      try {
+        await eventRepo.addEvent(eventDOD);
+      } catch (e) {
+        expect(String(e)).toContain('event entity with that action id is already exist');
+      }
+      expect((await typeormDatabase.createEntityManager().find(Event)).length).toBe(1);
+    });
+
+    test('fail, unit of work id isnt exist', async () => {
+      storeDispatcher.setThreadStore({
+        run<F, Fargs extends unknown[]>(store: T, fn: (...args: Fargs) => F, ...args: Fargs): F {
+          throw new Error();
+        },
+        getStore(): StorePayload {
+          return {
+            actionId: crypto.randomUUID(),
+            moduleResolver: new ModuleResolverMock(),
+            caller: {
+              type: 'ModuleCaller',
+              name: 'SubjectModule',
+              user: {
+                type: 'AnonymousUser',
+              },
+            },
+          };
+        },
+      });
+      try {
+        await eventRepo.addEvent(eventDOD);
+      } catch (e) {
+        expect(String(e)).toContain('unit of work id isnt exist');
+      }
+    });
   });
 
   describe('markAsPublished tests', () => {
