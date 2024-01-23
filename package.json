@@ -25,6 +25,7 @@
     "rilata": "craftyard/rilata-core",
     "rxjs": "^7.8.1",
     "sqlite3": "^5.1.6",
+    "ts-node": "^10.9.2",
     "typeorm": "^0.3.17"
   },
   "devDependencies": {
