@@ -13,7 +13,7 @@ import { ModuleResolverMock, eventDOD, typeormDatabase } from './fixture';
 import { Event } from '../event-repo/entities/event';
 
 let eventRepo: EventRepository;
-let globalUnitOfWorkId: string | undefined;
+let globalUnitOfWorkId: any;
 
 beforeAll(async () => {
   await typeormDatabase.init();
@@ -54,11 +54,12 @@ describe('event repo test', () => {
     test('success, event entity added to the repo', async () => {
       await eventRepo.addEvent(eventDOD);
       const eventEntity = await typeormDatabase.createEntityManager()
-        .findOne(Event, { where: { actionId: 'c7ab5938-ac52-47d6-b831-62fbd3cbc288' } });
+        .find(Event, { where: { actionId: 'c7ab5938-ac52-47d6-b831-62fbd3cbc288' } });
 
-      expect(eventEntity.actionId).toBe('c7ab5938-ac52-47d6-b831-62fbd3cbc288');
-      expect(eventEntity.isPublished).toBe(false);
-      expect(eventEntity.attrs).toBe('{"attrs":{"username":"azat","age":19},"meta":{"eventId":"d00103e8-eb18-4694-9efd-ce0b2dcbf0d7","actionId":"c7ab5938-ac52-47d6-b831-62fbd3cbc288","name":"UserAdded","moduleName":"subject","domainType":"event"},'
+      expect(eventEntity.length).toBe(1);
+      expect(eventEntity[0].actionId).toBe('c7ab5938-ac52-47d6-b831-62fbd3cbc288');
+      expect(eventEntity[0].isPublished).toBe(false);
+      expect(eventEntity[0].attrs).toBe('{"attrs":{"username":"azat","age":19},"meta":{"eventId":"d00103e8-eb18-4694-9efd-ce0b2dcbf0d7","actionId":"c7ab5938-ac52-47d6-b831-62fbd3cbc288","name":"UserAdded","moduleName":"subject","domainType":"event"},'
       + '"caller":{"type":"DomainUser","userId":"034e14d1-eabd-4491-b922-77b72f83590d"},"aRootAttrs":{"attrs":{"username":"azat","age":19},"meta":{"name":"UserAR","domainType":"aggregate","version":0}}}');
     });
 
@@ -103,11 +104,11 @@ describe('event repo test', () => {
     test('success, event entity marked as published', async () => {
       await eventRepo.addEvent(eventDOD);
       expect((await typeormDatabase.createEntityManager()
-        .findOne(Event, { where: { actionId: 'c7ab5938-ac52-47d6-b831-62fbd3cbc288' } })).isPublished).toBe(false);
+        .find(Event, { where: { actionId: 'c7ab5938-ac52-47d6-b831-62fbd3cbc288' } }))[0].isPublished).toBe(false);
 
       await eventRepo.markAsPublished('c7ab5938-ac52-47d6-b831-62fbd3cbc288');
       expect((await typeormDatabase.createEntityManager()
-        .findOne(Event, { where: { actionId: 'c7ab5938-ac52-47d6-b831-62fbd3cbc288' } })).isPublished).toBe(true);
+        .find(Event, { where: { actionId: 'c7ab5938-ac52-47d6-b831-62fbd3cbc288' } }))[0].isPublished).toBe(true);
     });
   });
 
